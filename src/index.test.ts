@@ -45,14 +45,20 @@ describe('retryFetch', () => {
     const customDelay = (attempt: number) => attempt * 1000;
     fetchSpy.mockRejectedValue(new Error('Network error'));
 
-    await expect(retryFetch('https://api.example.com', {}, 3, customDelay)).rejects.toThrow();
+    await expect(retryFetch('https://api.example.com', {
+      retries: 3,
+      retryDelay: customDelay
+    })).rejects.toThrow();
     expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
 
   it('should respect custom number of retries', async () => {
     fetchSpy.mockRejectedValue(new Error('Network error'));
 
-    await expect(retryFetch('https://api.example.com', {}, 4, (attempt) => attempt * 1000)).rejects.toThrow();
+    await expect(retryFetch('https://api.example.com', {
+      retries: 4,
+      retryDelay: (attempt) => attempt * 1000
+    })).rejects.toThrow();
     expect(fetchSpy).toHaveBeenCalledTimes(4);
   });
 });

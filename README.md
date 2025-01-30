@@ -4,12 +4,13 @@ A lightweight, dead simple TypeScript utility for making HTTP requests with auto
 
 ## API
 
-### retryFetch(url, options?, retries?, retryDelay?)
+### retryFetch(url, options?)
 
 - `url` (string): The URL to fetch
-- `options` (RequestInit): Standard fetch options (optional)
-- `retries` (number): Maximum number of retry attempts (default: 3)
-- `retryDelay` (function): Function to calculate delay between retries in milliseconds (default: exponential backoff)
+- `options` (RetryFetchOptions): Configuration object extending RequestInit with:
+  - `retries` (number): Maximum number of retry attempts (default: 3)
+  - `retryDelay` (function): Function to calculate delay between retries in milliseconds (default: exponential backoff)
+  - ...all standard fetch options
 
 Returns: `Promise<Response>`
 

@@ -1,16 +1,25 @@
 import { wait } from "./helpers/wait";
 
+interface RetryFetchOptions extends RequestInit {
+  retries?: number;
+  retryDelay?: (attempt: number) => number;
+}
+
 export async function retryFetch(
   url: string,
-  options: RequestInit = {},
-  retries: number = 3,
-  retryDelay: (attempt: number) => number = (attempt): number => Math.pow(2, attempt) * 1000
+  options: RetryFetchOptions = {}
 ): Promise<Response> {
+  const {
+    retries = 3,
+    retryDelay = (attempt: number): number => Math.pow(2, attempt) * 1000,
+    ...fetchOptions
+  } = options;
+
   let attempt = 0;
 
   while (attempt < retries) {
     try {
-      return await fetch(url, options);
+      return await fetch(url, fetchOptions);
     } catch (error) {
       if (attempt >= retries - 1) throw error;
 
